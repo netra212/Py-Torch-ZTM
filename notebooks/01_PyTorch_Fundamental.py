@@ -74,4 +74,41 @@ As I have used the lowercase letter for the `scalar` & `vector` and uppercase fo
 print("\n\n-----------------------------------")
 print("------------- Random Number ----------")
 print("-----------------------------------\n")
+# We can do so using torch.rand() and passing in the size parameter.
+print("Create a random tensors of size (3,4)")
+random_tensor = torch.rand(size=(3, 4))
+print("Random Tensor: \n", random_tensor, "\nData Types of random tensors:", random_tensor.dtype)
 
+'''
+The flexibility of torch.rand() is that we can adjust the size to be whatever
+we want. For example, say you wanted a random tensor in the common image shape
+of [224, 224, 3] ([height, width, color_channels]).
+'''
+
+'''
+# Create a random tensor of size (224, 224, 3)
+'''
+random_image_size_tensor = torch.rand(size=(224, 224, 3))
+print("Size: ", random_image_size_tensor.shape, " , ","Dimension: ", random_image_size_tensor.ndim)
+
+# Zeros & Ones.
+print("\n\n---------------------------------")
+print("----------- Zeros & Ones --------")
+print("-----------------------------------\n")
+
+'''
+Sometimes you'll just want to fill tensors with zeros or ones.
+This happens a lot with masking (like masking some of the values in one tensor
+with zeros to let a model know not to learn them).
+-> Create a tensor full of zeros with torch.zeros().
+'''
+# Create a tensor of all zeros.
+zeros = torch.zeros(size=(3, 4))
+print("Zeros Tesnsor: \n", zeros,  "\nData Types: ", zeros.dtype)
+
+# Create a tensor of all ones
+ones = torch.ones(size=(3, 4))
+print("\nOnes Tensors: \n", ones, "\n", "\nData Types: ", ones.dtype)
+
+
+# 
