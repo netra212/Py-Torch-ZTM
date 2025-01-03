@@ -64,6 +64,7 @@ print("Shape of the tensor:", TENSOR.shape)
 # 3 -> represent the 1 dimension.
 # 3 -> represent the 2nd dimension.
 
+
 '''
 As I have used the lowercase letter for the `scalar` & `vector` and uppercase for the `MATRIX` & `TENSOR` because this was on purpose. Also, name matrix and tensors are interchangably which is common in deep learning. Since in PyTorch you're often dealing with torch.Tensors (hence the tensor name), however, the shape and dimensions of what's inside will dictate what it actually is.
 '''
@@ -91,6 +92,7 @@ of [224, 224, 3] ([height, width, color_channels]).
 random_image_size_tensor = torch.rand(size=(224, 224, 3))
 print("Size: ", random_image_size_tensor.shape, " , ","Dimension: ", random_image_size_tensor.ndim)
 
+
 # Zeros & Ones.
 print("\n\n---------------------------------")
 print("----------- Zeros & Ones --------")
@@ -102,6 +104,8 @@ This happens a lot with masking (like masking some of the values in one tensor
 with zeros to let a model know not to learn them).
 -> Create a tensor full of zeros with torch.zeros().
 '''
+
+
 # Create a tensor of all zeros.
 zeros = torch.zeros(size=(3, 4))
 print("Zeros Tesnsor: \n", zeros,  "\nData Types: ", zeros.dtype)
@@ -110,5 +114,68 @@ print("Zeros Tesnsor: \n", zeros,  "\nData Types: ", zeros.dtype)
 ones = torch.ones(size=(3, 4))
 print("\nOnes Tensors: \n", ones, "\n", "\nData Types: ", ones.dtype)
 
+# Creating a range and tensors like.
+
+
+'''
+Sometimes you might want a range of numbers, such as 1 to 10 or 0 to 100.
+You can use torch.arange(start, end, step) to do so.
+Where:
+    start = start of range (e.g. 0)
+    end = end of range (e.g. 10)
+    step = how many steps in between each value (e.g. 1)
+Note: In Python, you can use range() to create a range. However in PyTorch,
+torch.range() is deprecated and may show an error in the future.
+'''
+# Use torch.arange(), torch.range() is depricated.
+# Create a range of value from 0 to 10.
+print("\n\n---------------------------------")
+print("------- Range & tensors Like ------")
+print("-----------------------------------\n")
+zero_to_10_values = torch.arange(start=1, end=10, step=1)
+print("Printing the values from zeros to 10 values: \n", zero_to_10_values)
+
+'''
+Sometimes you might want one tensor of a certain type with the same shape as
+another tensor.For example, a tensor of all zeros with the same shape as a
+previous tensor.
+To do so you can use torch.zeros_like(input) or torch.ones_like(input) which
+return a tensor filled with zeros or ones in the same shape as the input
+respectively.
+'''
+
+# Can also create a tensors of zeros similar to another tensor.
+ten_zeros = torch.zeros_like(input=zero_to_10_values) # will have same shape.
+print("Zero Likes: \n", ten_zeros)
+
+
+#
+print("\n\n---------------------------------")
+print("------- Tensor datatypes ------")
+print("-----------------------------------\n")
+'''
+Some are specific for CPU and some are better for GPU.
+The most common data type are torch.float32 or torch.float.
+This is referred to as "32-bit floating point". But there's also 16-bit
+floating point (torch.float16 or torch.half) and 64-bit floating point
+(torch.float64 or torch.double).
+# Note: An integer is a flat round number like 7 whereas a float has a decimal
+# 7.0. The reasons -> precision in computing.
+The higher the precision value (8, 16, 32), the more detail and hence data
+used to express a number. So, lower precision datatypes are generally faster
+to compute on but sacrifice some performance on evaluation metrics like
+accuracy (faster to compute but less accurate).
+'''
+
+# Default datatype for tensors in float32
+float_32_tensors = torch.tensor([3.0, 6.0, 9.0],
+                                dtype=None,  # default to None, which is torch.float32 or whatever datatype is passed.
+                                device=None, # defaults to None, which uses the default tensor type.
+                                requires_grad=False # If True, operations performed on the tensors are recorded.
+                        )
+
+print("Shape: ", float_32_tensors.shape, "dtype: ", float_32_tensors, "Device Used: ", float_32_tensors.device)
+
+# Most Common issues: datatype and device issues. For example, one of tensors is torch.float32 and the other is torch.float16 (PyTorch often likes tensors to be the same format).
 
 # 
