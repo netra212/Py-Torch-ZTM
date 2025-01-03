@@ -176,6 +176,95 @@ float_32_tensors = torch.tensor([3.0, 6.0, 9.0],
 
 print("Shape: ", float_32_tensors.shape, "dtype: ", float_32_tensors, "Device Used: ", float_32_tensors.device)
 
-# Most Common issues: datatype and device issues. For example, one of tensors is torch.float32 and the other is torch.float16 (PyTorch often likes tensors to be the same format).
+# Most Common issues: datatype and device issues. For example, one of tensors is torch.float32 and the other is torch.float16 (PyTorch often likes tensors to be the same format). Or one of your tensors is on the CPU and the other is on the GPU (PyTorch likes calculations between tensors to be on the same device).
 
 # 
+float_16_tensors = torch.tensor([3.0, 6.0, 9.0],
+                                dtype=torch.float16) # torch.half would also work.
+print("dtype: ", float_16_tensors.dtype)
+
+# Getting information from tensors
+print("\n\n-----------------------------------\n")
+print("- Getting information from tensors -")
+print("-----------------------------------\n")
+
+'''
+# We've seen these before but three of the most common attributes you'll want to find out about tensors are.
+    * shape - what shape is the tensor? (some operations require specific shape
+    rules).
+    * dtype - what datatype are the elements within the tensor stored in ?.
+    * device - what device is the tensor stored on? (usually GPU or CPU).
+'''
+
+# create a tensor. 
+some_tensor = torch.rand(3, 4)
+
+# Find out details about it.
+print("Displaying some tensor: \n", some_tensor)
+print("Datatypes of tensor: ", some_tensor.dtype)
+print("shape of tensors: ", some_tensor.shape)
+print("Device:  ", some_tensor.device)
+
+# Questions for myself: "what shape are my tensors? what datatype are they and where are they stored? what shape, what datatype, where where where"
+
+
+# 
+print("\n\n-----------------------------------\n")
+print("Manipulating tensors (tensor operations)")
+print("-----------------------------------\n")
+'''
+A model learns by investigating those tensors and performing a series of
+operations (could be 1,000,000s+) on tensors to create a representation
+of the pattern in the input data.
+These operations are often a wonderful dance between:
+    * Addition.
+    * Substraction.
+    * Multiplication (element-wise).
+    * Division.
+    * Matrix multiplication.
+Stacking these building blocks in the right way, you can create the most sophisticated of neural networks.
+'''
+print("-----------------------------------\n")
+print("-------- Basic operations --------")
+print("-----------------------------------\n")
+print("# Create a tensor of values and add a number to it")
+tensor = torch.tensor([1, 2, 3])
+print(tensor + 10)
+
+print("\n# Multiply it by 10")
+print(tensor * 10)
+
+# Notice how the tensor values above didn't end up being tensor([110, 120, 130]), this is because the values inside the tensor don't change unless they're reassigned.
+
+# Tensors don't change unless reassigned
+print("Tensor remained same: ")
+print(tensor)
+
+# Let's subtract a number and this time we'll reassign the tensor variable.
+# Subtract and reassign
+tensor = tensor - 10
+print("\n\n Tensor after the substraction: ", tensor)
+
+# 
+print("\nAdd and reassign")
+tensor = tensor + 10
+print("Adding and reassinging the tensor: ", tensor)
+
+# PyTorch also has a bunch of built-in functions like torch.mul() (short for multiplication) and torch.add() to perform basic operations.
+
+# Can also use torch functions
+print("\nImplementation of the inbuilt function of pytorch, torch.multiply: ", torch.multiply(tensor, 10))
+
+# But the Original tensor did not changed still. 
+print("\nOriginal tensors: ", tensor, "<-- Original tensor did not changed yet.")
+
+# However, it's more common to use the operator symbols like * instead of torch.mul().
+# Element-wise multiplication (each element multiplies its equivalent, index 0 -> 0, 1 -> 1, 2 -> 2)
+print("\n\n# Element-wise multiplication")
+print(tensor, "*", tensor)
+print("\nEquals:", tensor * tensor)
+
+# 
+print("-----------------------------------")
+print("Matrix multiplication (is all you need)")
+print("-----------------------------------")
