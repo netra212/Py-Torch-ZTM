@@ -268,3 +268,8 @@ print("\nEquals:", tensor * tensor)
 print("-----------------------------------")
 print("Matrix multiplication (is all you need)")
 print("-----------------------------------")
+'''
+PyTorch implements matrix multiplication functionality in the torch.matmul() 
+method.
+
+'''
