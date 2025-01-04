@@ -396,29 +396,36 @@ print("\nInput X: ", x)
 print(f"Minimum: {x.min()}")
 print(f"Maximum: {x.max()}")
 # print(f"Mean: {x.mean()}") # this will error
-print(f"Mean: {x.type(torch.float32).mean()}") # won't work without float datatype
+print(f"Mean: {x.type(torch.float32).mean()}")  # won't work without float
+# datatype
 print(f"Sum: {x.sum()}")
 
 # Note: We may find some methods such as torch.mean() require tensors to be in
 # torch.float32 (the most common) or another specific datatype, otherwise the operation will fail.
 
-print("-----------------------")
+
+print("\n-----------------------")
 print("Positional min/max")
 print("-----------------------")
 # Find the index of a tensor where the max or minimum occurs with
 # torch.argmax() and torch.argmin() respectively.
 
+
 # Create a tensor
 tensor = torch.arange(10, 100, 10)
 print(f"Tensor: {tensor}")
+
 
 # Returns index of max and min values
 print(f"Index where max value occurs: {tensor.argmax()}")
 print(f"Index where min value occurs: {tensor.argmin()}")
 
+
 print("\n-----------------------")
 print("Change tensor datatype")
 print("-----------------------")
+
+
 '''
 A common issue with deep learning operations is having your tensors in
 different datatypes.
@@ -427,6 +434,8 @@ into some errors.
 But we can change the datatypes of tensors using torch.Tensor.type(dtype=None)
 where the dtype parameter is the datatype you'd like to use.
 '''
+
+
 tensor = torch.arange(10., 100., 10.)
 print(tensor.shape, tensor.dtype)
 
@@ -445,4 +454,67 @@ print(tensor_int8.shape, tensor_int8.dtype)
 print("--------------------------------------------------")
 print("Reshaping, stacking, squeezing and unsqueezing")
 print("--------------------------------------------------")
+
+'''
+-----------
+# Method:
+-----------
+* `torch.reshape(input, shape)` -> Reshapes input to shape (if compatible),
+can also use `torch.Tensor.reshape()`.
+
+* `Tensor.view(shape)` -> Returns a view of the original tensor in a different
+shape but shares the same data as the original tensor.
+
+* `torch.stack(tensors, dim=0)` -> Concatenates a sequence of tensors along a
+new dimension (dim), all tensors must be same size.
+
+* `torch.squeeze(input)`	-> Squeezes input to remove all the dimenions with
+value 1.
+
+* `torch.unsqueeze(input, dim)` -> Returns input with a dimension value of 1
+added at dim.
+
+* `torch.permute(input, dims)` -> Returns a view of the original input with its dimensions permuted (rearranged) to dims.
+'''
+
+# Create a tensor
+print("\nTensor Created: ")
+x = torch.arange(1., 8.)
+print(x, x.shape)
+
+# Adds an extra dimension with reshape.
+print("Tensor Reshaped: ")
+x_reshaped = x.reshape(1, 7)
+print(x_reshaped, x_reshaped.shape)
+
+# We can also change the view.
+# Change view (keeps same data as original but changes view only).
+print("Tensor View: ")
+z = x.view(1, 7)
+print(z, z.shape)
+
+# changing the view of a tensor with torch.view() really only creates a new
+# view of the same tensor.
+# Changing z changes x.
+z[:, 0] = 5
+print(z, " <-----> ", x)
+
+# If we wanted to stack our new tensors on top of itself 5 times, we could do
+# with torch.stack().
+x_stacked = torch.stack([x, x, x, x, x], dim=0)  # try changing dim to dim=1 & see what happens.
+print(x_stacked)
+
+# Question: How about removing all single dimensions from a tensor?
+# To do so you can use torch.squeeze() --> this as squeezing the tensor to
+# only have dimensions over 1.
+print(f"Previous tensor: {x_reshaped}")
+print(f"Previous shape: {x_reshaped.shape}")
+
+# Remove extra dimension from x_reshaped
+x_squeezed = x_reshaped.squeeze()
+print(f"\nNew tensor: {x_squeezed}")
+print(f"New shape: {x_squeezed.shape}")
+
+# And to do the reverse of torch.squeeze() you can use torch.unsqueeze() to
+# add a dimension value of 1 at a specific index.
 
