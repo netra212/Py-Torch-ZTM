@@ -265,11 +265,184 @@ print(tensor, "*", tensor)
 print("\nEquals:", tensor * tensor)
 
 # 
-print("-----------------------------------")
+print("\n-----------------------------------")
 print("Matrix multiplication (is all you need)")
 print("-----------------------------------")
 '''
 PyTorch implements matrix multiplication functionality in the torch.matmul() 
 method.
+The main two rules for matrix multiplication to remember are:
+1. The inner dimensions must match:
+    * (3, 2) @ (3, 2) won't work
+    * (2, 3) @ (3, 2) will work
+    * (3, 2) @ (2, 3) will work
+
+2. The resulting matrix has the shape of the outer dimensions:
+    * (2, 3) @ (3, 2) -> (2, 2)
+    * (3, 2) @ (2, 3) -> (3, 3)
+
+    Note:- "@" in Python is the symbol for matrix multiplication.
 
 '''
+# Create a tensor and perform element-wise multiplication and matrix 
+# multiplication on it.
+tensor = torch.tensor([1, 2, 3])
+print("Tensor 1 for Multiplication: ", tensor)
+
+
+'''
+# The difference between element-wise multiplication and matrix multiplication 
+# is the addition of values.
+# For our tensor variable with values [1, 2, 3]
+
+Operation                    Calculation                      Code
+Element-wise multiplication	 [1*1, 2*2, 3*3]    = [1, 4, 9]	  tensor * tensor
+Matrix multiplication	     [1*1 + 2*2 + 3*3]  = [14]	      tensor.matmul(tensor)
+'''
+print("# Element-wise matrix multiplication: ", tensor * tensor)
+print("# Matrix multiplication: ", torch.matmul(tensor, tensor))
+
+print("# Can also use the '@' symbol for matrix multiplication, though not recommended: ", tensor @ tensor)
+
+# SHAPE ERRORS.
+print("----------------------------------------------------------------")
+print("One of the most common errors in deep learning (shape errors)")
+print("----------------------------------------------------------------")
+
+# # Shapes need to be in the right way.
+tensor_A = torch.tensor([[1, 2],
+[3, 4], [5, 6]], dtype=torch.float32)
+
+tensor_B = torch.tensor([[7, 10],
+[8, 11], [9, 12]], dtype=torch.float32)
+
+# print(torch.matmul(tensor_A, tensor_B)) # this will throw an error.
+
+'''
+We can make matrix multiplication work between tensor_A and tensor_B by making
+their inner dimensions match. One of the ways to do this is with a transpose
+(switch the dimensions of a given tensor).
+We can performs transposes in PyTorch using either:
+    * torch.transpose(input, dim0, dim1) - where input is the desired tensor
+        to transpose and dim0 and dim1 are the dimensions to be swapped.
+    * tensor.T - where tensor is the desired tensor to transpose.
+'''
+# View tensor_A and tensor_B.T
+print(tensor_A)
+tensor_B = tensor_B.T
+
+# The operation works when tensor_B is transposed.
+# The operation works when tensor_B is transposed
+print(f"Original shapes: tensor_A = {tensor_A.shape}, tensor_B = {tensor_B.shape}\n")
+print(f"New shapes: tensor_A = {tensor_A.shape} (same as above), tensor_B.T = {tensor_B.T.shape}\n")
+print(f"Multiplying: {tensor_A.shape} * {tensor_B.T.shape} <- inner dimensions match\n")
+print("Output:\n")
+output = torch.matmul(tensor_A, tensor_B)
+print(output) 
+print(f"\nOutput shape: {output.shape}")
+# You can also use torch.mm() which is a short for torch.matmul().
+output = torch.mm(tensor_A, tensor_B)
+print(output) 
+print(f"\nOutput shape: {output.shape}")
+
+# A matrix multiplication like this is also referred to as the dot product of
+# two matrices.
+
+
+'''
+# Neural networks are full of matrix multiplications and dot products.
+
+# The torch.nn.Linear() module also known as a feed-forward layer or fully
+# connected layer, implements a matrix multiplication between an input x
+# and a weights matrix A.
+# y = x . A^T + b
+where,
+    * x -> input to the layer (deep learning is a stack of layers like
+    torch.nn.Linear()) and others on top of each other.
+    * A -> weights matrix created by the layer, this starts out as random
+           numbers thst get adjusted as neural network learns to better
+           represent patterns in the data (notice the "T", that's because
+           weights matrix get transposed).
+           Note:- we might also often see 'W' or another letter like
+            'X' used to showcase the weights matrix.
+    * b -> bias term used to slightly offset the weights & inputs.
+    * y -> output or patterns.
+
+This above is the linear function with formula like y = m.x + b which is used
+to draw a straight line.
+'''
+
+# Since the linear layer starts with a random weights matrix, let's make it reproducible.
+torch.manual_seed(42)
+
+# This uses matrix multiplication.
+linear = torch.nn.Linear(in_features=2,   # in_features = matches inner dimension of input.
+                        out_features=6    # out_features = describe outer value.
+)
+
+x = tensor_A
+output = linear(x)
+print(f"Input shape: {x.shape}\n")
+print(f"Output:\n{output}\n\nOutput shape: {output.shape}")
+
+# Finding the min, max, mean, sum, etc (aggregation)
+# Create a tensor.
+print("\n-------------------------------------------------")
+print("Finding the min, max, mean, sum, etc (aggregation)")
+print("-------------------------------------------------")
+x = torch.arange(start=0, end=100, step=10)
+print("\nInput X: ", x)
+
+print(f"Minimum: {x.min()}")
+print(f"Maximum: {x.max()}")
+# print(f"Mean: {x.mean()}") # this will error
+print(f"Mean: {x.type(torch.float32).mean()}") # won't work without float datatype
+print(f"Sum: {x.sum()}")
+
+# Note: We may find some methods such as torch.mean() require tensors to be in
+# torch.float32 (the most common) or another specific datatype, otherwise the operation will fail.
+
+print("-----------------------")
+print("Positional min/max")
+print("-----------------------")
+# Find the index of a tensor where the max or minimum occurs with
+# torch.argmax() and torch.argmin() respectively.
+
+# Create a tensor
+tensor = torch.arange(10, 100, 10)
+print(f"Tensor: {tensor}")
+
+# Returns index of max and min values
+print(f"Index where max value occurs: {tensor.argmax()}")
+print(f"Index where min value occurs: {tensor.argmin()}")
+
+print("\n-----------------------")
+print("Change tensor datatype")
+print("-----------------------")
+'''
+A common issue with deep learning operations is having your tensors in
+different datatypes.
+If one tensor is in torch.float64 & another is in torch.float32, you might run
+into some errors.
+But we can change the datatypes of tensors using torch.Tensor.type(dtype=None)
+where the dtype parameter is the datatype you'd like to use.
+'''
+tensor = torch.arange(10., 100., 10.)
+print(tensor.shape, tensor.dtype)
+
+# Now we'll create another tensor the same as before but change its datatype
+# to torch.float16.
+
+tensor_float16 = tensor.type(torch.float16)
+print(tensor_float16.shape, tensor_float16.dtype)
+
+tensor_int8 = tensor.type(torch.int8)
+print(tensor_int8.shape, tensor_int8.dtype)
+
+# A torch.Tensor is a multi-dimensional matrix containing elements of a single
+# data types.
+
+print("--------------------------------------------------")
+print("Reshaping, stacking, squeezing and unsqueezing")
+print("--------------------------------------------------")
+
