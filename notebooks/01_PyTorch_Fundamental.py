@@ -604,4 +604,21 @@ print("\n-------------------------------------------------------------")
 print("Reproducibility (trying to take the random out of random)")
 print("\n-------------------------------------------------------------")
 
-# start with random numbers -> tensor operations -> try to make better (again and again and again)
+# start with random numbers -> tensor operations -> try to make better (again
+# and again and again)
+
+# Why randomness is neccessary ?
+# To perform repeatable experiments.
+# To get the same (or very similar) results on everyone computer running the same code as I get on mine.
+
+# Create two random tensors
+random_tensor_A = torch.rand(3, 4)
+random_tensor_B = torch.rand(3, 4)
+
+print(f"Tensor A:\n{random_tensor_A}\n")
+print(f"Tensor B:\n{random_tensor_B}\n")
+print(f"Does Tensor A equal Tensor B? (anywhere)")
+print(random_tensor_A == random_tensor_B)
+
+
+
