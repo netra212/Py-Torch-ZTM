@@ -641,3 +641,57 @@ print(f"Tensor D:\n{random_tensor_D}\n")
 print(f"Does Tensor C equal Tensor D? (anywhere)")
 print(random_tensor_C == random_tensor_D)
 
+# Running tensors on GPUs (and making faster computations)
+print("\n-------------------------------------------------------------")
+print("Running tensors on GPUs (and making faster computations)")
+print("-------------------------------------------------------------")
+
+'''
+1. Getting a GPU.
+2. Getting PyTorch to run on the GPU.
+'''
+
+# Check for GPU
+print(torch.cuda.is_available())
+
+# Set device type
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(device)
+
+# Note: In PyTorch, it's best practice to write device agnostic code. This
+# means code that'll run on CPU (always available) or GPU (if available).
+
+# Count number of devices
+print(torch.cuda.device_count())
+
+# 2.1 Getting PyTorch to run on Apple Silicon
+print(torch.backends.mps.is_available())  # Note this will print false if you're not running on a Mac.
+
+if torch.cuda.is_available():
+    device = "cuda"  # Use NVIDIA GPU (if available)
+elif torch.backends.mps.is_available():
+    device = "mps"  # Use Apple Silicon GPU (if available)
+else:
+    device = "cpu"  # Default to CPU if no GPU is available
+
+
+# 3. Putting tensors (and models) on the GPU
+# Create tensor (default on CPU)
+tensor = torch.tensor([1, 2, 3])
+
+# Tensor not on GPU
+print(tensor, tensor.device)
+
+# Move tensor to GPU (if available)
+tensor_on_gpu = tensor.to(device)
+tensor_on_gpu
+
+
+# 4. Moving tensors back to the CPU
+# If tensor is on GPU, can't transform it to NumPy (this will error)
+tensor_on_gpu.numpy()
+
+# Instead, copy the tensor back to cpu
+tensor_back_on_cpu = tensor_on_gpu.cpu().numpy()
+print(tensor_back_on_cpu)
+
