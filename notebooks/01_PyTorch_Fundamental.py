@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 print("-----------------------------------")
 print("- Version of torch: -")
 print("-----------------------------------")
@@ -518,3 +519,89 @@ print(f"New shape: {x_squeezed.shape}")
 # And to do the reverse of torch.squeeze() you can use torch.unsqueeze() to
 # add a dimension value of 1 at a specific index.
 
+# You can also rearrange the order of axes values with
+# `torch.permute(input, dims)`, where the input gets turned into a view with
+# new dims.
+
+# Create tensor with specific shape.
+x_original = torch.rand(size=(224, 224, 3))
+
+# Permute the original tensor to rearrange the axis order.
+x_permuted = x_original.permute(2, 0, 1)
+# shifts axis 0 -> 1, 1 -> 2, 2 -> 0
+
+print(f"Previous shape: {x_original.shape}")
+print(f"New shape: {x_permuted.shape}")
+
+# Note: Because permuting returns a view (shares the same data as the original), the values in the permuted tensor will be the same as the original tensor and if you change the values in the view, it will change the values of the original.
+
+# 
+print("\n----------------------------------------")
+print("Indexing (selecting data from tensors)")
+print("----------------------------------------")
+# Create a tensor.
+x = torch.arange(1, 10).reshape(1, 3, 3)
+print(x, x.shape)  # Indexing values goes outer dimension -> inner dimension.
+
+# 
+# Let's index bracket by bracket
+print(f"First square bracket:\n{x[0]}") 
+print(f"Second square bracket: {x[0][0]}") 
+print(f"Third square bracket: {x[0][0][0]}")
+
+# Get all values of 0th dimension and the 0 index of 1st dimension.
+print(x[:, 0])
+
+# Get all values of 0th & 1st dimensions but only index 1 of 2nd dimension
+print(x[:, :, 1])
+
+# Get all values of the 0 dimension but only the 1 index value of the 1st and 2nd dimension
+print(x[:, 1, 1])
+
+# Get index 0 of 0th and 1st dimension and all values of 2nd dimension 
+print(x[0, 0, :]) # same as x[0][0]
+
+print("----------------------------------------")
+print("----- PyTorch tensors & NumPy ------")
+print("----------------------------------------")
+
+'''
+# The two main methods you'll want to use for NumPy to PyTorch
+# (and back again) are:
+  * torch.from_numpy(ndarray) - NumPy array -> PyTorch tensor.
+  * torch.Tensor.numpy() - PyTorch tensor -> NumPy array.
+'''
+
+# 
+array = np.arange(1.0, 8.0)
+tensor = torch.from_numpy(array)
+print(array, tensor)
+
+'''
+Note: By default, NumPy arrays are created with the datatype float64 and if you convert it to a PyTorch tensor, it'll keep the same datatype (as above).
+
+However, many PyTorch calculations default to using float32.
+
+So if you want to convert your NumPy array (float64) -> PyTorch tensor (float64) -> PyTorch tensor (float32), you can use tensor = torch.from_numpy(array).type(torch.float32).
+
+'''
+
+# # Change the array, keep the tensor
+array = array + 1
+print(array, tensor)
+
+# # Tensor to NumPy array
+tensor = torch.ones(7) # create a tensor of ones with dtype=float32
+numpy_tensor = tensor.numpy() # will be dtype=float32 unless changed
+print(tensor, numpy_tensor)
+
+# Change the tensor, keep the array the same
+tensor = tensor + 1
+print(tensor, numpy_tensor)
+
+# Reproducibility (trying to take the random out of random).
+print("\n-------------------------------------------------------------")
+print("Reproducibility (trying to take the random out of random)")
+print("\n-------------------------------------------------------------")
+
+# start with random numbers -> tensor operations -> try to make better (again and again and again)
